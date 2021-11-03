@@ -1,0 +1,113 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Recommendations
+{% endblock %}
+
+{% block main %}
+    <script>
+
+    // Function checks user input before the page is submitted, if there are any fields not filled out that need to be filled out, highlights them in red and displays an alert with the issue
+    function CheckForm(){
+        var recommender = document.getElementById("recommender").value;
+        var relationship = document.getElementById("relationship").value;
+        var strength = document.getElementById("strength").value;
+        var recr = document.getElementById("recr").value;
+
+        // Must input recommender name to be added or removed
+        if(recommender == "" && recr == "")
+        {
+            alert("Please enter recommender to be added/removed");
+            document.getElementById("recommender").style.borderColor = "red";
+            document.getElementById("recr").style.borderColor = "red";
+            return false;
+        }
+
+        // If adding recommendation
+        if (recr == "")
+        {
+
+            // Recommender name must be longer than 2 characters
+            if(recommender.length <=2)
+            {
+                alert("Recommender name is too short");
+                document.getElementById("recommender").style.borderColor = "red";
+                return false;
+            }
+
+            // Must select relationship to recommender
+            else if (relationship == "")
+            {
+                alert("Must input relationship to recommender");
+                document.getElementById("relationship").style.borderColor = "red";
+                return false;
+            }
+
+            // Must select anticipated strength of recommendation
+            else if (strength == "")
+            {
+                alert("Must input anticipated strength of recommendation");
+                document.getElementById("strength").style.borderColor = "red";
+                return false;
+            }
+        }
+    }
+    </script>
+
+    <form action="/edit_recommendations" method="post" onsubmit="return CheckForm();">
+        
+        <h3>Add a Recommendation</h3>
+        <div class="page-wrapper">
+            <!--User inputs recommender's name-->
+            <input autocomplete="off" autofocus class="form-control" name="recommender" id="recommender" placeholder="Name of recommender" type="text">
+    
+            <!--User selects relationship to recommender-->
+            <select name="relationship" id="relationship">
+              <option value="" disabled selected>Choose Relationship</option>
+              <option value="Personal">Personal</option>
+              <option value="Professional">Professional</option>
+              <option value="Academic">Academic</option>
+              <option value="Other">Other</option>
+            </select>
+    
+            <!--User selects anticipated recommendation strength-->
+            <select name="strength" id="strength">
+              <option value="" disabled selected>Choose Anticipated Recommendation Strength</option>
+              <option value="10">10 (Strongest)</option>
+              <option value="9">9</option>
+              <option value="8">8</option>
+              <option value="7">7</option>
+              <option value="6">6</option>
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1 (Weakest)</option>
+            </select>
+        </div>
+        
+        <h3>Remove a Recommendation</h3>
+        <div class="remove-wrapper">
+            <!--User selects recommendation to be removed-->
+            <select name="recr" id="recr">
+              <option value="">Choose Recommendation To Remove</option>
+              {% for row in recommendations %}
+                  <option value="{{ row.recommender }}">{{ row.recommender }}</option>
+              {% endfor %}
+            </select>
+        </div>
+        
+        <div class="btn-wrapper">
+        <!--Adds/removes recommendation to database on click-->
+        <button class="btn btn-primary" type="submit">Update</button>
+        </div>
+        
+        <div class="btn-wrapper">
+        <!--Returns user to My Profile page-->
+        <footer>
+                <input id="cancel" type="button" value="Cancel" onclick="window.location.href = '/'">
+        </footer>
+        </div>
+        
+    </form>
+{% endblock %}

@@ -1,0 +1,283 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Rate Application
+{% endblock %}
+
+{% block main %}
+
+    <script>
+
+    // Function that identifies user's deficiencies in their current application stats, calculates relative strength of a user's application
+    function CheckForm(){
+        var science = '{{ science }}';
+        var math = '{{ math }}';
+        var english = '{{ english }}';
+        var history = '{{ history }}';
+        var for_lang = '{{ for_lang }}';
+        var extra = '{{ extra }}';
+        var AP = '{{ AP }}';
+        var gpa = '{{ gpa }}';
+        var best_test = '{{ best_test }}';
+        var best_write = '{{ best_write }}';
+        var sats = '{{ sats }}';
+        var rec_avg = '{{ rec_avg }}';
+        var honors_ratio = '{{ honors_ratio }}';
+        // Counts strikes against user, the higher the count the weaker the user's application is deemed to be
+        var counter = 0;
+
+        // If the user has not taken any classes, displays text saying they need to to get an accurate rating
+        if (gpa == "no")
+        {
+            document.getElementById("class_no").style.display="block";
+            counter += 18;
+        }
+
+        else
+        {
+            // Displays text recommending user take at least 4 science, math, history, and english classes before graduation if they have not yet, adds 1 to counter
+            if(science < 4 || math < 4 || english < 4 || history < 4)
+            {
+                document.getElementById("class_low").style.display="block";
+                counter++;
+            }
+
+            // Displays text recommending user take at least 2 foreign language classes before graduation if they have not yet, adds 1 to counter
+            if(for_lang < 2)
+            {
+                document.getElementById("for_lang").style.display="block";
+                counter++;
+            }
+
+            // Displays text recommending user take at least 4 additional non-core classes before graduation if they have not yet, adds 1 to counter
+            if(extra < 4)
+            {
+                document.getElementById("extra").style.display="block";
+                counter++;
+            }
+
+            // If user has satisfied all above conditions, displays text saying they have done so
+            else
+            {
+                document.getElementById("class_good").style.display="block";
+            }
+
+            // If user's honors ratio is too low, displays text recommending they take more honors-level or higher classes, adds 1 to counter
+            if(honors_ratio < 0.66)
+            {
+                document.getElementById("class_good").style.display="block";
+                counter++;
+            }
+
+            // Displays text based on user's gpa, the lower the gpa the more that gets added to the counter
+            if(gpa == 4.0)
+            {
+                document.getElementById("gpa_top").style.display="block";
+            }
+
+            else if(gpa < 4.0 && gpa > 3.5)
+            {
+                document.getElementById("gpa_mid").style.display="block";
+                counter++;
+            }
+
+            else if(gpa < 3.5 && gpa > 3.0)
+            {
+                document.getElementById("gpa_av").style.display="block";
+                counter += 2;
+            }
+
+            else
+            {
+                document.getElementById("gpa_low").style.display="block";
+                counter += 3;
+            }
+        }
+        // Displays text based on user's best standardized test score, the lower the score the more that gets added to the counter, if the user has not added any tests, displays text recommending they do so, adds 1 to counter
+        if(best_test == "no")
+        {
+            document.getElementById("no_test").style.display="block";
+            counter += 2;
+        }
+        else if(best_test == 32)
+        {
+            document.getElementById("test_top").style.display="block";
+        }
+        else if(best_test == 27)
+        {
+            document.getElementById("test_hi").style.display="block";
+            counter++;
+        }
+        else if(best_test == 24)
+        {
+            document.getElementById("test_mid").style.display="block";
+            counter++;
+        }
+        else if(best_test == 21)
+        {
+            document.getElementById("test_av").style.display="block";
+            counter += 2;
+        }
+        else
+        {
+            document.getElementById("test_low").style.display="block";
+            counter += 3;
+        }
+
+        // Displays text based on user's best standardized test writing score, the lower the writing score the more that gets added to the counter, if the user has not taken any tests with writing, displays text recommending they do so, adds 1 to counter
+        if(best_write == "no")
+        {
+            document.getElementById("write_no").style.display="block";
+            counter++;
+        }
+        else if(best_write == 6)
+        {
+            document.getElementById("write_hi").style.display="block";
+        }
+        else if(best_write == 4)
+        {
+            document.getElementById("write_mid").style.display="block";
+            counter++;
+        }
+        else
+        {
+            document.getElementById("write_low").style.display="block";
+            counter += 2;
+        }
+
+        // Displays text based on number of SAT Subject tests user has taken, the more tests the less that is added to the counter
+        if(sats == 0)
+        {
+            document.getElementById("no_sats").style.display="block";
+            counter++;
+        }
+        else if(sats == 1)
+        {
+            document.getElementById("one_sats").style.display="block";
+            counter++;
+        }
+        else
+        {
+            document.getElementById("more_sats").style.display="block";
+        }
+
+        // Displays text based on number of AP Tests user has taken, the more tests the less that is added to the counter
+        if(AP == 0)
+        {
+            document.getElementById("no_ap").style.display="block";
+            counter += 2;
+        }
+        else if(AP <= 3)
+        {
+            document.getElementById("some_ap").style.display="block";
+            counter++;
+        }
+        else
+        {
+            document.getElementById("hi_ap").style.display="block";
+        }
+
+        // Displays text based on the average recommendation strength of user's recommendations, the lower the strength the more that is added to the counter
+        if(rec_avg == "no")
+        {
+            document.getElementById("no_recs").style.display="block";
+            counter += 2;
+        }
+        else if(rec_avg <= 10 && rec_avg >= 8)
+        {
+            document.getElementById("hi_recs").style.display="block";
+        }
+        else if(rec_avg < 8 && rec_avg > 6 )
+        {
+            document.getElementById("mid_recs").style.display="block";
+            counter++;
+        }
+        else
+        {
+            document.getElementById("lo_recs").style.display="block";
+            counter += 3;
+        }
+
+        // Displays final rating of user's overall application stats, the higher the counter is the weaker the application is
+        if(counter > 14)
+        {
+            document.getElementById("bad").style.display="block";
+        }
+        else if(counter <= 14 && counter > 10)
+        {
+            document.getElementById("semi").style.display="block";
+        }
+        else if(counter <= 10 && counter > 6)
+        {
+            document.getElementById("good").style.display="block";
+        }
+        else if(counter <= 6 && counter > 2)
+        {
+            document.getElementById("better").style.display="block";
+        }
+        else
+        {
+            document.getElementById("best").style.display="block";
+        }
+    }
+
+    </script>
+
+    <body onload="CheckForm()">
+
+        <!--Appear based on user scores-->
+        <h2>Classes</h2>
+        <p id="class_no" style="display:none">You haven't entered any classes yet!</p>
+        <p id="class_low" style="display:none">Many colleges require taking at least four years of Science, English, Math, and History during high school. It is highly recommended that you take enough of these classes to meet this requirement by the time you graduate.</p>
+        <p id="for_lang" style="display:none">Many colleges highly recommend taking at least two years of Foreign Language during high school. If possible, try to take at least two foreign language classes in the same language before you graduate to boost your admission chances.</p>
+        <p id="extra" style="display:none">There are many students just like you that will be applying to colleges at the same time as yourself. Try to take at least four classes in non-core subjects that you are interested in to separate yourself from other applicants, and give your application a bit more of an edge.</p>
+        <p id="class_good" style="display:none">Looks like you've taken all of your required core classes as well as a diverse range of non-core classes. Nice job! Your class load will be appealing to colleges and you have a better chance of getting into your dream school!</p>
+        <p id="honors_low" style="display:none">Colleges want applicants who are willing to step outside of their comfort zones and take more challenging classes. Next year, try to take at least one more honors-level or above class to really demonstrate your willingness to push yourself in the classroom.</p>
+        <p id="gpa_top" style="display:none">Awesome! Your perfect gpa demonstrates your commitment to hard work and success in school. Colleges use gpa as one of the primary indicators of a student's future success, and yours shows that you are able to excel in the classroom.</p>
+        <p id="gpa_mid" style="display:none">Great job! Your gpa is very competitive. Colleges use gpa as one of the primary indicators of a student's future success, and yours shows that you are willing to put in the time to be a great student.</p>
+        <p id="gpa_av" style="display:none">Nice! Your gpa is solid. Colleges use gpa as one of the primary indicators of a student's future success, and yours shows that while certain classes may have given you trouble, you were able to maintain a good gpa. For a better chance in the admissions process, try to take some easier classes to get at least a 3.5.</p>
+        <p id="gpa_low" style="display:none">Your gpa could use some improvement. Colleges use gpa as one of the primary indicators of a student's future success, and so it would be worthwhile to get your gpa to at least a 3.0. Try taking easier classes, and utilize your teachers, peers, and all resources your school has available to help you succeed in the classroom. Don't worry, you can do this!</p>
+        <hr>
+
+        <!--Appear based on user scores-->
+        <h2>Tests</h2>
+        <p id="no_test" style="display:none">It looks like you haven't taken any standardized admissions tests yet. Not to worry! If you are a freshman, sophomore, or even a junior, start preparing to take at least one ACT or SAT before the end of your junior year. It is never to early to get ready, and the more you prepare the better you will perform on the real thing. Your performance on standardized tests like the ACT and SAT is very important to colleges across the country, and many scholarships even have minimum test scores as requirements. Get studying!</p>
+        <p id="test_top" style="display:none">Incredible! Your standardized test score is among the top of all test takers! Colleges weigh applicants' standardized test scores heavily when making admissions decisions, and your score makes you a very competitive applicant at even the most selective institutions.</p>
+        <p id="test_hi" style="display:none">Excellent! Your standardized test score is very good relative to all other test takers! Colleges weigh applicants' standardized test scores heavily when making admissions decisions, and your score gives you a good shot at gaining admission to highly selective institutions. Consider taking another test to get a higher score and boost your chances even more!</p>
+        <p id="test_mid" style="display:none">Great! Your standardized test score is above average! Colleges weigh applicants' standardized test scores heavily when making admissions decisions, and your score gives you a chance at admission to selective institutions. Consider taking another test to get a higher score and boost your chances even more!</p>
+        <p id="test_av" style="display:none">Good! Your standardized test score is on par with the average score of other test takers. Colleges weigh applicants' standardized test scores heavily when making admissions decisions, and your score means you will have a good shot at getting into many traditional universities. Consider taking another test to get a higher score and boost your chances even more!</p>
+        <p id="test_low" style="display:none">Your standardized test scores are low compared to students nationally. Don't be discouraged; many applicants take standardized tests multiple times to get higher scores. Consider getting a tutor and taking the tests again. You can do it!</p>
+        <p id="write_no" style="display:none">It looks like you haven't taken an ACT or SAT with writing. Although optional, the writing section is also used by most schools to gauge your writing abilities within a finite amount of time. It is highly recommended that you take a test with a writing section, however it is not required.</p>
+        <p id="write_hi" style="display:none">Nice work! Your writing score is among the best nationally, and your application is in great shape if you send this score to colleges.</p>
+        <p id="write_mid" style="display:none">Good job! Your writing score is average among test takers. Consider taking another test to boost your score by one or two points to really bolster your test scores.</p>
+        <p id="write_no" style="display:none">Your writing score could use improvement. Try looking at some test prep books specifically for the writing portion of the test. While it may seem difficult, getting an amazing writing score is certainly within reach if you are willing to put in some practice time!</p>
+        <p id="no_sats" style="display:none">Taking SAT Subject Tests is completely optional. However, they give you an opportunity to shine in subjects that you are strong in! Try to take at least two to help yourself stand out among other applicants and show your enthusiasm for what you really like to learn about!</p>
+        <p id="one_sats" style="display:none">Nice! You've taken an SAT Subject Test. If you've scored above the 50th percentile, that score is worth sending to schools. It shows that you are willing to go the extra mile to demonstrate your strengths in specific subjects. Try to take at least one more to further strengthen your application!</p>
+        <p id="more_sats" style="display:none">Great! You've taken two SAT Subject Tests. If you've scored above the 50th percentile in either, those scores are worth sending to colleges. They show you put in the time to study and the effort to study well despite your already busy schedule as a student, and will reflect well on you as colleges examine your application.</p>
+        <p id="no_ap" style="display:none">You should look into taking some AP classes. They allow you to knock out some credits early, and show schools that you are already prepared for college-level class.</p>
+        <p id="some_ap" style="display:none">Good job! You've taken some AP classes. While difficult, they show schools that you are willing to challenge yourself and take on a college-level workload. Different schools have different requirements to use AP scores for college credit, so look on the website of colleges you are thinking about for more information.</p>
+        <p id="hi_ap" style="display:none">Outstanding! You've taken a lot of AP classes. Colleges will be happy to see that you have already adapted to a college-level workload, and you might even be able to get credit for these classes at the college you attend. Check college websites for more information on AP scores and credit at that institution.</p>
+        <hr>
+
+        <!--Appear based on user scores-->
+        <h2>Recommendations</h2>
+        <p id="no_recs" style="display:none">So you have no recommendations. Don't fret! As a student, you have undoubtedly formed relationships with some of your favorite teachers, supervisors, or others who can speak to not only your achievements but also your character. These are the people you should ask for recommendations! They will likely be more than happy to write one for you, provided you ask them well in advance of the due date. Try to request one from them at least a month to two months prior to when you want to submit your application.</p>
+        <p id="hi_recs" style="display:none">Nice! Your recommendations are strong, and will serve as a boon to your application. Colleges value high grades and test scores, but they also want students who are personable and who can build rapport with others. Your recommendations show this and more, and they will decidedly strengthen your application.</p>
+        <p id="mid_recs" style="display:none">Good! Your recommendations are decent, and will help humanize you and make you more than just numbers and grades to the person or committee that reviews your application. If possible, see if you can think of another person who you know would write an incredible recommendation for you. They may be someone you never thought of!</p>
+        <p id="lo_recs" style="display:none">Your recommendations are not very strong, and they threaten to harm your application more than they will help it. Re-evaluate who you have asked to write recommendations for you. It is likely that you will find someone who will write you a better recommendation. </p>
+        <hr>
+
+        <!--Appear based on counter value-->
+        <h2>Rating</h2>
+        <p id="bad" style="display:none">Your application needs some improvement. If you are still a freshman or sophomore, don't worry too much. There is plenty of time to make your application stronger. Otherwise, you will need to work hard to bring your application strength up to levels that colleges like to see. Look at all of the areas for improvement listed, and find ways to turn them from weaknesses into strengths.</p>
+        <p id="semi" style="display:none">Your application is alright. There is still a lot of areas in which you can improve. One of the quickest things to boost your rating is test scores, which can turn from bad to great in less than a day if you are able to do well on a standardized test. Also try to take more honors-level classes, and look into taking an SAT Subject Test or two if you haven't yet; there are plenty of ways to make your application better!</p>
+        <p id="good" style="display:none">Your application is good! While there are some weaknesses and areas in which you could improve, there are definitely some strong points to your application as well. Try to look at some of the areas to improve upon above, and knock at least two off of the list before you submit your application to schools. Nice work!</p>
+        <p id="better" style="display:none">Your application is great! There are a lot of things to be proud of in your application, and not many reasons that schools would have to not admit you. Try to remedy one or two of the issues above and really take your application to the next level! Keep it up!</p>
+        <p id="best" style="display:none">Your application is incredible! Each area of your application is strong and will look very good as schools review it! Fixing your weak spots, if any, will still help your chances. Now focus on writing some beautiful essays!</p>
+
+        <footer>
+                <input id="cancel" type="button" value="Return to My Profile" onclick="window.location.href = '/'">
+        </footer>
+
+    </body>
+{% endblock %}

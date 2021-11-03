@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Classes
+{% endblock %}
+
+{% block main %}
+
+    <script>
+
+    // Function checks user input before the page is submitted, if there are any fields not filled out that need to be filled out, highlights them in red and displays an alert with the issue
+    function CheckForm(){
+        var title=document.getElementById('title').value;
+        var type=document.getElementById('type').value;
+        var honors=document.getElementById('honors').value;
+        var grade=document.getElementById('grade').value;
+        var classr=document.getElementById('classr').value;
+
+        // Name of class to be added/removed required
+        if(title == "" && classr == "")
+        {
+            alert('Please enter class to add or remove');
+            document.getElementById('title').style.borderColor = "red";
+            document.getElementById('classr').style.borderColor = "red";
+            return false;
+        }
+
+        // If adding a class
+        if (classr == "")
+        {
+            // The title must be longer than 2 characters
+            if(title.length <=2)
+            {
+                alert('Your class title is too short');
+                document.getElementById('title').style.borderColor = "red";
+                return false;
+            }
+
+            // Must select class type
+            else if(type == "")
+            {
+                alert('Must enter class type');
+                document.getElementById('type').style.borderColor = "red";
+                return false;
+            }
+
+            // Must select honors level
+            else if(honors == "")
+            {
+                alert('Must enter honors level');
+                document.getElementById('honors').style.borderColor = "red";
+                return false;
+            }
+
+            // Must select grade earned
+            else if(grade == "")
+            {
+                alert('Must enter grade earned');
+                document.getElementById('grade').style.borderColor = "red";
+                return false;
+            }
+        }
+    }
+    </script>
+
+    <form action="/edit_classes" method="post" onsubmit="return CheckForm();">
+        <h3>Add a Class</h3>
+        <div class="page-wrapper">
+            <!--User inputs class title-->
+            <input autocomplete="off" autofocus class="form-control" name="title" id="title" placeholder="Class Title" type="text">
+
+            <!--User selects class type-->
+            <select name="type" id="type">
+              <option value="" disabled selected>Choose Class Type</option>
+              <option value="Math">Math</option>
+              <option value="Science">Science</option>
+              <option value="English">English</option>
+              <option value="History">History</option>
+              <option value="Foreign Language">Foreign Language</option>
+              <option value="Music">Music</option>
+              <option value="Art">Art</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <!--User selects honors level-->
+            <select name="honors" id="honors">
+              <option value="" disabled selected>Choose Honors Level</option>
+              <option value="Honors">Honors</option>
+              <option value="AP">AP</option>
+              <option value="IB">IB</option>
+              <option value="--">--</option>
+            </select>
+
+            <!--User selects grade-->
+            <select name="grade" id="grade">
+              <option value="" disabled selected>Choose Grade</option>
+              <option value="a+">A+</option>
+              <option value="a">A</option>
+              <option value="a-">A-</option>
+              <option value="b+">B+</option>
+              <option value="b">B</option>
+              <option value="b-">B-</option>
+              <option value="c+">C+</option>
+              <option value="c">C</option>
+              <option value="c-">C-</option>
+              <option value="d+">D+</option>
+              <option value="d">D</option>
+              <option value="d-">D-</option>
+              <option value="f">F</option>
+            </select>
+        </div>
+
+        <!--User selects class to be removed-->
+        <h3>Remove a Class</h3>
+        <div class="remove-wrapper">
+            <select name="classr" id="classr">
+              <option value="">Choose Class To Remove</option>
+              {% for row in classes %}
+                  <option value="{{ row.name }}">{{ row.name }}</option>
+              {% endfor %}
+            </select>
+        </div>
+
+        <div class="btn-wrapper">
+            <!--Adds/removes class to database on click-->
+            <button class="btn btn-primary" type="submit">Update</button>
+        </div>
+
+        <div class="btn-wrapper">
+            <!--Returns user to My Profile page-->
+            <footer>
+                <input id="cancel" type="button" value="Cancel" onclick="window.location.href = '/'">
+            </footer>
+        </div>
+
+    </form>
+{% endblock %}

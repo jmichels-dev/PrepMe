@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <script>
+
+    function CheckForm(){
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var confirmation = document.getElementById("confirmation").value;
+        var users = '{{ users }}';
+        if(username == "")
+        {
+            alert("Must create username to register");
+            document.getElementById("username").style.borderColor = "red";
+            return false;
+        }
+
+
+        else if(password == "")
+        {
+            alert("Must create password to register");
+            document.getElementById("password").style.borderColor = "red";
+            return false;
+        }
+
+        else if(password.length < 8)
+        {
+            alert("Password must be at least 8 characters long");
+            document.getElementById("password").style.borderColor = "red";
+            return false;
+        }
+
+        else if(confirmation == "")
+        {
+            alert("Must confirm password to register");
+            document.getElementById("confirmation").style.borderColor = "red";
+            return false;
+        }
+
+        else if(password != confirmation)
+        {
+            alert("Passwords do not match");
+            document.getElementById("password").style.borderColor = "red";
+            document.getElementById("confirmation").style.borderColor = "red";
+            return false;
+        }
+
+        for (i = 0; i < users.length; i++)
+        {
+            if(username == users[i])
+            {
+                alert("Username already taken");
+                document.getElementById("username").style.borderColor = "red";
+                return false;
+            }
+        }
+    }
+
+    </script>
+
+     <form action="/register" method="post" onsubmit="return CheckForm();">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" id="username" placeholder="Username" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" id="password" placeholder="Password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" id="confirmation" placeholder="Password (again)" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+{% endblock %}

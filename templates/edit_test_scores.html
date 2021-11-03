@@ -1,0 +1,395 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit Test Scores
+{% endblock %}
+
+{% block main %}
+    <script>
+
+        // Function checks user input before the page is submitted, if there are any fields not filled out that need to be filled out, highlights them in red and displays an alert with the issue
+        function check_score(){
+            var test_type = document.getElementById("test").value;
+            var rtest_type = document.getElementById("testr").value;
+            var score = parseInt(document.getElementById("score").value, 10);
+            var scorew = parseInt(document.getElementById("scorew").value, 10);
+            var ssubject = document.getElementById("ssubject").value;
+            var asubject = document.getElementById("asubject").value;
+            var subrs = document.getElementById("subrs").value
+            var subra = document.getElementById("subra").value
+
+            // Must select test to be added or removed
+            if(test_type == "" && rtest_type == "")
+                {
+                    alert('Must enter test to be added or removed');
+                    document.getElementById('test').style.borderColor = "red";
+                    document.getElementById('testr').style.borderColor = "red";
+                    return false;
+                }
+
+            // Must enter numeric score
+            if(isNaN(score) && rtest_type == "")
+            {
+                alert('Score must be numeric');
+                document.getElementById('score').style.borderColor = "red";
+                return false;
+            }
+
+            // If test is ACT
+            if(test_type == "ACT" || test_type == "ACT w/ Writing")
+            {
+
+                // Score must be between 1 and 36
+                if(score > 36 || score < 1)
+                {
+                    alert('ACT score must be between 1 and 36');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+
+                // Score must be whole number
+                else if(score%1 != 0)
+                {
+                    alert('ACT score must be a whole number');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+            }
+
+            // If test is SAT
+            else if(test_type == "SAT" || test_type == "SAT w/ Writing")
+            {
+
+                // Score must be between 400 and 1600
+                if(score > 1600 || score < 400)
+                {
+                    alert('SAT score must be between 400 and 1600');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+
+                // Score must be factor of 10
+                else if(score%10 != 0)
+                {
+                    alert('SAT score must be factor of 10');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+            }
+
+            // If SAT Subject Test
+            else if(test_type == "SAT Subject Test")
+            {
+
+                // Score must be between 200 and 800
+                if(score > 800 || score < 200)
+                {
+                    alert('SAT II score must be between 200 and 800');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+
+                // Score must be factor of 10
+                else if(score%10 != 0)
+                {
+                    alert('SAT II score must be factor of 10');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+            }
+
+            // If test is AP Test
+            else if(test_type == "AP Test")
+            {
+
+                // Score must be between 1 and 5
+                if(score > 5 || score < 1)
+                {
+                    alert('Test score must be between 1 and 5');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+
+                // Score must be whole number
+                else if(score%1 != 0)
+                {
+                    alert('Test score must be whole number');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+            }
+
+            // If test has writing score
+            if(test_type == "ACT w/ Writing" || test_type == "SAT w/ Writing")
+            {
+
+                // Writing score must be numeric
+                if(isNaN(scorew))
+                {
+                    alert('Score must be numeric');
+                    document.getElementById('scorew').style.borderColor = "red";
+                    return false;
+                }
+
+                // Writing score must be whole number
+                else if(score%1 != 0)
+                {
+                    alert('Test score must be whole number');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+            }
+
+            // If ACT writing score
+            if(test_type == "ACT w/ Writing")
+            {
+
+                // Score must be between 2 and 12
+                if(scorew > 12 || scorew < 2)
+                {
+                    alert('Writing score must be between 2 and 12');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+            }
+
+            // If SAT writing score
+            else
+            {
+                // Score must be between 2 and 8
+                if(scorew > 8 || scorew < 2)
+                {
+                    alert('Writing score must be between 2 and 8');
+                    document.getElementById('score').style.borderColor = "red";
+                    return false;
+                }
+            }
+
+            // If SAT Subject Test or AP test
+            if(test_type == "SAT Subject Test" || test_type == "AP Test")
+            {
+
+                // Must select subject
+                if(ssubject == "" && asubject == "")
+                {
+                    alert('Must enter test subject');
+                    document.getElementById('ssubject').style.borderColor = "red";
+                    document.getElementById('asubject').style.borderColor = "red";
+                    return false;
+                }
+            }
+            
+            // User must specify which subject SAT Subject Test they are removing
+            if(rtest_type == "SAT Subject Test" && subrs == "")
+            {
+                alert('Must specify which subject test to be removed');
+                document.getElementById('subrs').style.borderColor = "red";
+                return false;
+            }
+            
+            // User must specify which subject AP Test they are removing
+            else if(rtest_type == "AP Test" && subra == "")
+            {
+                alert('Must specify which subject test to be removed');
+                document.getElementById('subra').style.borderColor = "red";
+                return false;
+            }
+        }
+
+    // Function makes writing score field, SAT Subject Test subject field, or ACT Test subject field appear based on test type selected. Updates page each time test type is changed
+    function appear(){
+        var test_type = document.getElementById("test").value;
+
+        // If writing test, display writing score field
+        if(test_type == "ACT w/ Writing" || test_type == "SAT w/ Writing")
+        {
+            document.getElementById("ssubject").style.display="none";
+            document.getElementById("asubject").style.display="none";
+            document.getElementById("scorew").style.display="block";
+        }
+
+        // If SAT Subject Test, display SAT Subject Test subject field
+        else if(test_type == "SAT Subject Test")
+        {
+             document.getElementById("scorew").style.display="none";
+             document.getElementById("asubject").style.display="none";
+             document.getElementById("ssubject").style.display="block";
+        }
+
+        // If AP Test, display AP Test subject field
+        else if(test_type == "AP Test")
+        {
+            document.getElementById("scorew").style.display="none";
+            document.getElementById("ssubject").style.display="none";
+            document.getElementById("asubject").style.display="block";
+        }
+
+        // If none, display none
+        else
+        {
+            document.getElementById("scorew").style.display="none";
+            document.getElementById("ssubject").style.display="none";
+            document.getElementById("asubject").style.display="none";
+        }
+    }
+
+    // Function makes SAT Subject Test subject field or ACT Test subject field appear based on test type TO BE REMOVED selected. Updates page each time test type is changed
+    function rappear(){
+        var rtest_type = document.getElementById("testr").value;
+
+        // If SAT Subject Test, display subject field with SAT Subject Test subjects user has taken
+        if(rtest_type == "SAT Subject Test")
+        {
+             document.getElementById("subrs").style.display="block";
+             document.getElementById("subra").style.display="none";
+        }
+
+        // If AP Test, display subject field with AP Test subjects user has taken
+        else if(rtest_type == "AP Test")
+        {
+            document.getElementById("subrs").style.display="none";
+            document.getElementById("subra").style.display="block";
+        }
+
+        // If none, display none
+        else
+        {
+            document.getElementById("subrs").style.display="none";
+            document.getElementById("subra").style.display="none";
+        }
+    }
+
+
+    </script>
+
+
+    <form action="/edit_test_scores" method="post" onsubmit="return check_score();">
+        
+        <h3>Add a Test</h3>
+        <div class="page-wrapper">
+            <!--User selects test type-->
+            <select name="test" id="test" onChange="appear()">
+              <option value="" disabled selected>Choose Test</option>
+              <option value="ACT">ACT</option>
+              <option value="ACT w/ Writing">ACT w/ Writing</option>
+              <option value="SAT">SAT</option>
+              <option value="SAT w/ Writing">SAT w/ Writing</option>
+              <option value="SAT Subject Test">SAT Subject Test (SAT II)</option>
+              <option value="AP Test">AP Test</option>
+            </select>
+    
+            <!--User inputs test score-->
+            <input autocomplete="off" name="score" id="score" placeholder="Score on Test" type="text">
+    
+            <!--User inputs writing test score, if applicable-->
+            <input autocomplete="off" name="scorew" id="scorew" placeholder="Writing Score" type="text" style="display:none">
+    
+            <!--User inputs SAT Subject Test subject, if applicable-->
+            <select name="ssubject" id="ssubject" style="display:none">
+                <option value="" disabled selected>Choose Subject</option>
+                <option value="Math Level 1">Math Level 1</option>
+                <option value="Math Level 2">Math Level 2</option>
+                <option value="Biology E/M">Biology E/M</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Physics">Physics</option>
+                <option value="Literature">Literature</option></option>
+                <option value="U.S. History">U.S. History</option>
+                <option value="World History">World History</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Spanish w/ Listening">Spanish w/ Listening</option>
+                <option value="French">French</option>
+                <option value="French w/ Listening">French w/ Listening</option>
+                <option value="Chinese w/ Listening">Chinese w/ Listening</option>
+                <option value="Italian">Italian</option>
+                <option value="German">German</option>
+                <option value="German w/ Listening">German w/ Listening</option>
+                <option value="Modern Hebrew">Modern Hebrew</option>
+                <option value="Latin">Latin</option>
+                <option value="Japanese w/ Listening">Japanese w/ Listening</option>
+                <option value="Korean w/ Listening">Korean w/ Listening</option>
+            </select>
+    
+            <!--User inputs AP Test subject, if applicable-->
+            <select name= "asubject" id="asubject" style="display:none">
+                <option value="" disabled selected>Choose Subject</option>
+                <option value="Art History">Art History</option>
+                <option value="Music Theory">Music Theory</option>
+                <option value="English Language and Composition">English Language and Composition</option>
+                <option value="English Literature and Composition">English Literature and Composition</option>
+                <option value="Comparative Government and Politics">Comparative Government and Politics</option>
+                <option value="European History">European History</option></option>
+                <option value="Human Geography">Human Geography</option>
+                <option value="Macroeconomics">Macroeconomics</option>
+                <option value="Microeconomics">Microeconomics</option>
+                <option value="Psychology">Psychology</option>
+                <option value="United States Government and Politics">United States Government and Politics</option>
+                <option value="United States History">United States History</option>
+                <option value="World History: Modern">World History: Modern</option>
+                <option value="Calculus AB">Calculus AB</option>
+                <option value="Calculus BC">Calculus BC</option>
+                <option value="Computer Science A">Computer Science A</option>
+                <option value="Computer Science Principles">Computer Science Principles</option>
+                <option value="Statistics">Statistics</option>
+                <option value="Biology">Biology</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Environemntal Science">Environemntal Science</option>
+                <option value="Physics 1: Algebra Based">Physics 1: Algebra Based</option>
+                <option value="Physics 2: Algebra Based">Physics 2: Algebra Based</option>
+                <option value="Physics C: Electricity and Magnetism">Physics C: Electricity and Magnetism</option>
+                <option value="Physics C: Mechanics">Physics C: Mechanics</option>
+                <option value="Chinese Language and Culture">Chinese Language and Culture</option>
+                <option value="French Language and Culture">French Language and Culture</option>
+                <option value="German Language and Culture">German Language and Culture</option>
+                <option value="Italian Language and Culture">Italian Language and Culture</option>
+                <option value="Japanese Language and Culture">Japanese Language and Culture</option>
+                <option value="Latin">Latin</option>
+                <option value="Spanish Language and Culture">Spanish Language and Culture</option>
+                <option value="Spanish Literature and Culture">Spanish Literature and Culture</option>
+            </select>
+        </div>
+        
+        <h3>Remove a Test</h3>
+        <div class="remove-wrapper">
+            <!--User selects test to be removed-->
+            <select name="testr" id="testr" onChange="rappear()">
+              <option value="">Choose Test To Remove</option>
+              {% for row in tests %}
+                  <option value="{{ row.type }}">{{ row.type }}</option>
+              {% endfor %}
+            </select>
+    
+            <!--User selects subject of SAT Subject Test to be removed, if applicable-->
+            <select name="subrs" id="subrs" style="display:none">
+              <option value="">Subject</option>
+              {% for row in tests %}
+                {% if row.type == "SAT Subject Test" %}
+                      <option value="{{ row.subject }}">{{ row.subject }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+    
+            <!--User selects subject of AP Test to be removed, if applicable-->
+            <select name="subra" id="subra" style="display:none">
+              <option value="">Subject</option>
+              {% for row in tests %}
+                {% if row.type == "AP Test" %}
+                      <option value="{{ row.subject }}">{{ row.subject }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+        </div>
+        
+        <div class="btn-wrapper">
+            <!--Add/remove tests to database on click-->
+            <button class="btn btn-primary" type="submit">Update</button>
+        </div>
+        
+        <div class="btn-wrapper">
+            <!--Returns user to My Profile page-->
+            <footer>
+                    <input id="cancel" type="button" value="Cancel" onclick="window.location.href = '/'">
+            </footer>
+        </div>
+    </form>
+
+{% endblock %}

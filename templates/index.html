@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Profile
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <div class="wrapper">
+            <h2>Your Profile</h2>
+                <!--Table that displays user's current classes-->
+                <table class="center", id = "classes">
+                    <h3>Classes</h3>
+                    <thead>
+                        <tr>
+                            <th>Class</th>
+                            <th>Subject</th>
+                            <th>Honors/AP/IB?</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in transcript | sort(attribute='name') %}
+                        <tr>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.type }}</td>
+                            <td>{{ row.honors }}</td>
+                            <td>{{ row.grade|upper }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        
+            <!--Link to edit classes page-->
+            <footer>
+                <input id="edit_classes" type="button" value="Edit Classes" onclick="window.location.href = '/edit_classes'">
+            </footer>
+
+            <!--Table that displays user's current tests-->
+            <div class="wrapper">
+                <table class="center" id="tests">
+                    <h3>Tests</h3>
+                    <thead>
+                        <tr>
+                            <th>Test</th>
+                            <th>Subject</th>
+                            <th>Score</th>
+                            <th>Writing Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in tests | sort(attribute='type') %}
+                        <tr>
+                            <td>{{ row.type }}</td>
+                            <td>{{ row.subject }}</td>
+                            <td>{{ row.score }}</td>
+                            <td>{{ row.scorew }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!--Link to edit tests page-->
+            <footer>
+                <input id="edit_tests" type="button" value="Edit Tests" onclick="window.location.href = '/edit_test_scores'">
+            </footer>
+
+            <!--Table that displays user's current recommendations-->
+            <div class="wrapper">
+                <table class="center" id="recommendations">
+                    <h3>Recommendations</h3>
+                    <thead>
+                        <tr>
+                            <th>Recommender</th>
+                            <th>Relationship</th>
+                            <th>Strength</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in recommendations | sort(attribute='recommender') %}
+                        <tr>
+                            <td>{{ row.recommender }}</td>
+                            <td>{{ row.relationship }}</td>
+                            <td>{{ row.strength }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!--Link to edit recommendations page-->
+            <footer>
+                <input id="edit_recommendations" type="button" value="Edit Recommendations" onclick="window.location.href = '/edit_recommendations'">
+            </footer>
+
+            <!--Link to user's application rating page-->
+            <div class="wrapper">
+                <footer>
+                    <input id="edit_classes" type="button" value="See My Rating!" onclick="window.location.href = '/rate_application'">
+                </footer>
+            </div>
+            <!--Link to resume tips page-->
+            <footer class="small text-center text-muted">
+            Submitting a resume? Check out some helpful resume tips <a href="/resume_tips">here</a>.
+            </footer>
+    </div>
+{% endblock %}

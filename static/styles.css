@@ -1,0 +1,117 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+/* Color for brand */
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+
+main .form-control
+{
+    /* Center form controls */
+    display: inline-block;
+
+    /* Override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* Center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}
+
+table th,
+table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+    width: 90%;
+}
+
+.wrapper {
+    padding: 35px;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Sets background for homepage */
+.homepage {
+    background-image: url('/static/background.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+    width: 100%;
+}
+
+th {
+    background-color: DarkGray;
+}
+
+tr {
+    background-color: HoneyDew;
+}
+
+tr:nth-child(even) {
+    background-color: LightCyan;
+}
+
+h2, h3, h5, th, td, p, li, footer, span, option, input, select, label, button {
+    font-family: Georgia, Times, serif;
+}
+
+h2 {
+    text-align: left;
+}
+
+p, li {
+    text-align: justify;
+}
+
+.page-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 35px;
+}
+
+.remove-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 35px;
+}
+
+.btn-wrapper {
+    padding: 10px;
+}
+
+.pic-wrapper {
+    padding: 5px;
+}
